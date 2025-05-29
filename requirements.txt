@@ -5,3 +5,4 @@ streamlit
 plotly
 openpyxl
 alpha_vantage
+fpdf
