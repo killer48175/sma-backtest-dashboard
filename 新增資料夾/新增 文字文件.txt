@@ -7,11 +7,10 @@ from datetime import datetime
 import time
 from alpha_vantage.timeseries import TimeSeries
 import plotly.graph_objects as go
-from fpdf import FPDF
 
 # Streamlit page configuration
 st.set_page_config(page_title="SMA Multi-Stock Backtest", layout="wide")
-st.title("📈 Multi-Stock Strategy Backtest Analysis")
+st.title("📈 SMA Multi-Stock Strategy Backtest Analysis")
 
 # Sidebar settings
 st.sidebar.header("🔧 Settings")
@@ -43,34 +42,6 @@ def fetch_data(ticker, start, end, retry=2, source="yfinance"):
             except Exception:
                 time.sleep(1)
         return pd.DataFrame()
-
-# PDF report class
-class PDFReport(FPDF):
-    def header(self):
-        self.set_font('Arial', 'B', 12)
-        self.cell(0, 10, 'Backtest Performance Report', 0, 1, 'C')
-
-    def footer(self):
-        self.set_y(-15)
-        self.set_font('Arial', 'I', 8)
-        self.cell(0, 10, f'Page {self.page_no()}', 0, 0, 'C')
-
-# Function to generate PDF report
-def generate_pdf_report(summary_df):
-    pdf = PDFReport()
-    pdf.add_page()
-    pdf.set_font('Arial', '', 12)
-
-    # Add summary table
-    pdf.cell(0, 10, 'Performance Summary:', 0, 1)
-    pdf.set_font('Arial', '', 10)
-    for index, row in summary_df.iterrows():
-        pdf.cell(0, 10, f"{index}: {', '.join([f'{col}: {row[col]:.2f}' for col in summary_df.columns])}", 0, 1)
-
-    # Save PDF
-    pdf_file_path = 'backtest_report.pdf'
-    pdf.output(pdf_file_path)
-    return pdf_file_path
 
 # Main logic
 if run:
@@ -233,8 +204,5 @@ if run:
         st.subheader("📋 Backtest Performance Summary")
         st.dataframe(summary_df.style.format("{:.2f}"))
         st.download_button("Download Performance Table (CSV)", summary_df.to_csv().encode("utf-8-sig"), file_name="sma_summary.csv", mime="text/csv")
-
-        # Generate PDF report
-        pdf_path = generate_pdf_report(summary_df)
-        with open(pdf_path, "rb") as pdf_file:
-            st.download_button("Download PDF Report", pdf_file.read(), file_name="backtest_report.pdf", mime="application/pdf")
+        # Export results to PDF (placeholder for actual implementation)
+        st.download_button("Download PDF Report", b"PDF content placeholder", file_name="backtest_report.pdf", mime="application/pdf")
